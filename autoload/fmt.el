@@ -26,26 +26,26 @@
    (t (error "Invalid formatter: %s" fmt))))
 
 ;;;###autoload
-(defun fmt/buffer ()
-  ""
+(defun fmt/buffer (&optional fmt)
+  "Format the current buffer with FMT or `fmt/formatter'."
   (interactive)
-  (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize)
+  (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize fmt)
     (if buffer-fn
         (funcall buffer-fn)
       (funcall region-fn (point-min) (point-max)))))
 
 ;;;###autoload
-(defun fmt/region (beg end)
-  ""
+(defun fmt/region (beg end &optional fmt)
+  "Format the current region with FMT or `fmt/formatter'."
   (interactive "r")
-  (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize)
+  (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize fmt)
     (if region-fn
         (funcall region-fn beg end)
       (funcall buffer-fn))))
 
 ;;;###autoload
 (defun fmt/dwim ()
-  ""
+  "Format the current buffer or region."
   (interactive)
   (call-interactively
    (if (use-region-p)
