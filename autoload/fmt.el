@@ -5,25 +5,25 @@
 (defun fmt--normalize (&optional fmt)
   "Return FMT or `fmt/formatter' as a cons (BUF-FN . REG-FN)."
   (unless fmt (setq fmt fmt/formatter))
-  (unless fmt (error "No formatter"))
-  (unless (or (functionp fmt)
-              (and (consp fmt)
-                   (functionp (car fmt))
-                   (functionp (cdr fmt))))
-    (error "Invalid formatter: %s" fmt))
+  (cond
+   ((not fmt) (error "No formatter"))
 
-  (unless (consp fmt)
-    ;; Here fmt is a function.
+   ((functionp fmt)
     (cl-destructuring-bind (min . max) (func-arity fmt)
-      (setq fmt (cons (and (zerop min) fmt)
-                      (and (<= min 2)
-                           (or (symbolp max) (>= max 2))
-                           fmt)))))
-  ;; Here fmt is a cons.
-  (unless (or (car fmt) (cdr fmt))
-    (error "Formatter has wrong arity: %s" fmt))
-  ;; Return fmt.
-  fmt)
+      (let ((fmt-cons (cons nil nil)))
+        ;; Can `fmt' be used as buffer formatter?
+        (when (zerop min) (setf (car fmt-cons) fmt))
+        ;; Can `fmt' be used as region formatter?
+        (when (and (<= min 2) (or (symbolp max) (>= max 2)))
+          (setf (cdr fmt-cons) fmt))
+        (if (or (car fmt-cons) (cdr fmt-cons)) fmt-cons
+          (error "Wrong formatter arity: %s, %s, %s" fmt min max)))))
+
+   ((consp fmt)
+    (if (or (car fmt) (cdr fmt)) fmt
+      (error "Invalid formatter: (nil . nil)")))
+
+   (t (error "Invalid formatter: %s" fmt))))
 
 ;;;###autoload
 (defun fmt/buffer ()
