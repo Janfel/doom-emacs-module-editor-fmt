@@ -75,6 +75,6 @@
   "Format the current buffer or region."
   (interactive)
   (call-interactively
-   (if (use-region-p)
+   (if (doom-region-active-p)
        #'fmt/region
      #'fmt/buffer)))
