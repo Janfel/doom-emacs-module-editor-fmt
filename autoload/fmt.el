@@ -1,9 +1,7 @@
 ;;; editor/fmt/autoload.el -*- lexical-binding: t; -*-
 
-(defvar fmt/formatter)
-
+;; {{{ Normalizing the formatter.
 (defun fmt--classify (fmt)
-  (unless fmt (error "No formatter specified"))
   (let* ((arity (func-arity fmt))
          (min (car arity))
          (max (cdr arity))
@@ -14,6 +12,17 @@
       (error "Wrong formatter arity: %s, %s, %s" fmt min max))
     (cons buffer region)))
 
+(defun fmt--normalize (&optional fmt)
+  (unless fmt (setq fmt fmt/formatter))
+  (cond ((null fmt) (error "No formatter specified"))
+        ((consp fmt) (if (or (car fmt) (cdr fmt)) fmt
+                       (error "Invalid formatter: (nil . nil)")))
+        ((functionp fmt) (let ((arity (fmt--classify fmt)))
+                           (cons (and (car arity) fmt)
+                                 (and (cdr arity) fmt))))
+        (t (error "Invalid formatter: %s" fmt))))
+;; }}}
+;; {{{ Narrowing to region.
 (defun fmt--current-indentation ()
   (save-excursion
     (goto-char (point-min))
@@ -45,31 +54,21 @@
            (fmt--save-indentation
             (cl-letf (((symbol-function 'widen) #'ignore))
               ,@body)))))))
-
-;;;###autoload
-(defmacro fmt-defcombine! (name buf-fn reg-fn)
-  (declare (indent defun))
-  `(defun ,name (&optional beg end)
-     "Reformats the current buffer or region from BEG to END.
-If BEG or END is nil, `point-min' and `point-max' are used instead.
-Suitable for direct use in `fmt/formatter'."
-     (if (eq beg end) (,buf-fn)
-       (,reg-fn (or beg (point-min)) (or end (point-max))))))
+;; }}}
 
 ;;;###autoload
 (defmacro fmt-define! (name &rest body)
   "Define the formatter NAME using `reformatter-define'.
 
-This macro creates the functions `fmt|NAME-format-buffer'
-and `fmt|NAME-format-region'.
-It also creates a function called `fmt|NAME' that combines the above.
-This function can be used as the value of `fmt/formatter'.
-BODY is passed to `reformatter-define' unchanged, however the argument
-:mode is set to nil by default."
+This macro creates the functions
+`fmt|NAME-format-buffer' and `fmt|NAME-format-region'.
+It also creates a function called `fmt|NAME' to be
+used as the value of `fmt/formatter'.
+BODY is passed to `reformatter-define' unchanged,
+however the argument :mode is set to nil by default."
   (declare (indent defun))
   (let ((short-name (intern (format "fmt|%s" name)))
         (long-name (intern (format "fmt|%s-format" name)))
-        (name-buf (intern (format "fmt|%s-format-buffer" name)))
         (name-reg (intern (format "fmt|%s-format-region" name))))
   `(progn
      (reformatter-define ,long-name :mode nil ,@body)
@@ -80,21 +79,19 @@ BODY is passed to `reformatter-define' unchanged, however the argument
 (defun fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `fmt/formatter'."
   (interactive)
-  (let* ((fmt (or fmt fmt/formatter))
-         (buffer? (car (fmt--classify fmt))))
-    (if buffer? (funcall fmt)
-      (funcall fmt (point-min) (point-max)))))
+  (cl-destructuring-bind (buf-fn . reg-fn) (fmt--normalize fmt)
+    (if buf-fn (funcall buf-fn)
+      (funcall reg-fn (point-min) (point-max)))))
 
 ;;;###autoload
 (defun fmt/region (beg end &optional fmt)
   "Format the current region with FMT or `fmt/formatter'."
   (interactive "r")
-  (let* ((fmt (or fmt fmt/formatter))
-         (region? (cdr (fmt--classify fmt))))
-    (if region? (funcall fmt beg end)
+  (cl-destructuring-bind (buf-fn . reg-fn) (fmt--normalize fmt)
+    (if reg-fn (funcall reg-fn beg end)
       (if (and (eq beg (point-min)) (eq end (point-max)))
-          (funcall fmt)
-        (fmt--narrowed-to-region beg end (funcall fmt))))))
+          (funcall buf-fn)
+        (fmt--narrowed-to-region beg end (funcall buf-fn))))))
 
 ;;;###autoload
 (defun fmt/dwim ()
