@@ -41,6 +41,32 @@
         (max 0 (- ,indent (fmt--current-indentation)))))))
 
 ;;;###autoload
+(defmacro fmt-define! (name &rest body)
+  "Define the formatter NAME using reformatter.el.
+
+This macro creates the functions `fmt|NAME-format-buffer'
+and `fmt|NAME-format-region'.
+It also creates a function called `fmt|NAME' that combines the above.
+This function can be used as the value of `fmt/formatter'.
+BODY is passed to `reformatter-define' unchanged, however the argument
+:mode is set to nil by default."
+  (declare (indent defun))
+  (let ((short-name (intern (format "fmt|%s" name)))
+        (long-name (intern (format "fmt|%s-format" name)))
+        (name-buf (intern (format "fmt|%s-format-buffer" name)))
+        (name-reg (intern (format "fmt|%s-format-region" name))))
+  `(progn
+     (reformatter-define ,long-name :mode nil ,@body)
+     (fmakunbound ',long-name)
+     (defun ,short-name (&optional beg end)
+       "Reformats the current buffer or region from BEG to END.
+Suitable for direct use in `fmt/formatter'."
+       (interactive "r")
+       (if (and beg end (not (eq beg end)))
+           (,name-reg beg end)
+         (,name-buf))))))
+
+;;;###autoload
 (defun fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `fmt/formatter'."
   (interactive)
