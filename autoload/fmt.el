@@ -42,7 +42,7 @@
 
 ;;;###autoload
 (defmacro fmt-define! (name &rest body)
-  "Define the formatter NAME using reformatter.el.
+  "Define the formatter NAME using `reformatter-define'.
 
 This macro creates the functions `fmt|NAME-format-buffer'
 and `fmt|NAME-format-region'.
@@ -60,11 +60,10 @@ BODY is passed to `reformatter-define' unchanged, however the argument
      (fmakunbound ',long-name)
      (defun ,short-name (&optional beg end)
        "Reformats the current buffer or region from BEG to END.
+If BEG or END is nil, `point-min' and `point-max' are used instead.
 Suitable for direct use in `fmt/formatter'."
-       (interactive "r")
-       (if (and beg end (not (eq beg end)))
-           (,name-reg beg end)
-         (,name-buf))))))
+       (if (eq beg end) (,name-buf)
+         (,name-reg (or beg (point-min)) (or end (point-max))))))))
 
 ;;;###autoload
 (defun fmt/buffer (&optional fmt)
