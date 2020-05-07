@@ -11,7 +11,7 @@ If R is non-nil, FMT can be used with two arguments."
          (region (and (<= min 2)
                       (or (symbolp max) (>= max 2)))))
     (unless (or buffer region)
-      (error "Wrong formatter arity: %s, %s, %s" fmt min max))
+      (error "Wrong formatter arity: %s, %s" fmt arity))
     (cons buffer region)))
 
 (defun fmt--normalize (&optional fmt)
