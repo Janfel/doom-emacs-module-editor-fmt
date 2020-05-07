@@ -108,21 +108,22 @@ Suitable for direct use in `fmt/formatter'."
 (defun fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `fmt/formatter'."
   (interactive)
-  (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize fmt)
-    (if buffer-fn
-        (funcall buffer-fn)
-      (funcall region-fn (point-min) (point-max)))))
+  (let* ((fmt (or fmt fmt/formatter))
+         (buffer? (car (fmt--classify fmt))))
+    (if buffer?
+        (funcall fmt)
+      (funcall fmt (point-min) (point-max)))))
 
 ;;;###autoload
 (defun fmt/region (beg end &optional fmt)
   "Format the current region with FMT or `fmt/formatter'."
   (interactive "r")
-  (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize fmt)
-    (if region-fn (funcall region-fn beg end)
+  (let* ((fmt (or fmt fmt/formatter))
+         (region? (cdr (fmt--classify fmt))))
+    (if region? (funcall fmt beg end)
       (if (and (eq beg (point-min)) (eq end (point-max)))
-          (funcall buffer-fn)
-        (fmt--narrowed-to-region beg end
-          (funcall buffer-fn))))))
+          (funcall fmt)
+        (fmt--narrowed-to-region beg end (funcall fmt))))))
 
 ;;;###autoload
 (defun fmt/dwim ()
