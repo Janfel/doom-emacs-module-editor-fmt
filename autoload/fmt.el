@@ -25,6 +25,21 @@
 
    (t (error "Invalid formatter: %s" fmt))))
 
+(defun fmt--current-indentation ()
+  (save-excursion
+    (goto-char (point-min))
+    (skip-chars-forward " \t\n\r")
+    (current-indentation)))
+
+(defmacro fmt--save-indentation (&rest body)
+  (let ((indent (make-symbol "indent")))
+    `(let ((,indent (fmt--current-indentation)))
+       (indent-rigidly (point-min) (point-max) (- ,indent))
+       ,@body
+       (indent-rigidly
+        (point-min) (point-max)
+        (max 0 (- ,indent (fmt--current-indentation)))))))
+
 ;;;###autoload
 (defun fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `fmt/formatter'."
@@ -39,9 +54,21 @@
   "Format the current region with FMT or `fmt/formatter'."
   (interactive "r")
   (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize fmt)
-    (if region-fn
-        (funcall region-fn beg end)
-      (funcall buffer-fn))))
+    (if (and (eq beg (point-min)) (eq end (point-max)))
+        (funcall buffer-fn)
+      (if region-fn (funcall region-fn beg end)
+        (save-excursion
+          (save-restriction
+            ;; Normalize the region to use full lines.
+            (goto-char beg) (skip-chars-forward " \t\n\r") (beginning-of-line)
+            (setq beg (max beg (point)))
+            (goto-char end) (skip-chars-backward " \t\n\r") (end-of-line)
+            (setq end (min end (point)))
+
+            (narrow-to-region beg end)
+            (fmt--save-indentation
+             (cl-letf (((symbol-function 'widen) #'ignore))
+               (funcall buffer-fn)))))))))
 
 ;;;###autoload
 (defun fmt/dwim ()
