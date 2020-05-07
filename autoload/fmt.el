@@ -64,25 +64,6 @@ The expression (or BUF-FN REG-FN) always evaluates to t."
               ,@body)))))))
 
 ;;;###autoload
-(defmacro fmt-define! (name &rest body)
-  "Define the formatter NAME using `reformatter-define'.
-
-This macro creates the functions
-`fmt|NAME-format-buffer' and `fmt|NAME-format-region'.
-It also creates a function called `fmt|NAME' to be
-used as the value of `fmt/formatter'.
-BODY is passed to `reformatter-define' unchanged,
-however the argument :mode is set to nil by default."
-  (declare (indent defun))
-  (let ((short-name (intern (format "fmt|%s" name)))
-        (long-name (intern (format "fmt|%s-format" name)))
-        (name-reg (intern (format "fmt|%s-format-region" name))))
-  `(progn
-     (reformatter-define ,long-name :mode nil ,@body)
-     (fmakunbound ',long-name)
-     (defalias ',short-name #',name-reg))))
-
-;;;###autoload
 (defun fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `fmt/formatter'."
   (interactive)
