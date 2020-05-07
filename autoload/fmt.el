@@ -40,6 +40,33 @@
         (point-min) (point-max)
         (max 0 (- ,indent (fmt--current-indentation)))))))
 
+(defmacro fmt--narrowed-to-region (beg end &rest body)
+  (let ((beg-sym (make-symbol "beg"))
+        (end-sym (make-symbol "end")))
+    `(let (,beg-sym ,end-sym)
+       (save-excursion
+         (save-restriction
+           ;; Normalize the region to use full lines.
+           (goto-char ,beg) (skip-chars-forward " \t\n\r") (beginning-of-line)
+           (setq ,beg-sym (max ,beg (point)))
+           (goto-char ,end) (skip-chars-backward " \t\n\r") (end-of-line)
+           (setq ,end-sym (min ,end (point)))
+
+           (narrow-to-region ,beg-sym ,end-sym)
+           (fmt--save-indentation
+            (cl-letf (((symbol-function 'widen) #'ignore))
+              ,@body)))))))
+
+;;;###autoload
+(defmacro fmt-defcombine! (name buf-fn reg-fn)
+  (declare (indent defun))
+  `(defun ,name (&optional beg end)
+     "Reformats the current buffer or region from BEG to END.
+If BEG or END is nil, `point-min' and `point-max' are used instead.
+Suitable for direct use in `fmt/formatter'."
+     (if (eq beg end) (,buf-fn)
+       (,reg-fn (or beg (point-min)) (or end (point-max))))))
+
 ;;;###autoload
 (defmacro fmt-define! (name &rest body)
   "Define the formatter NAME using `reformatter-define'.
@@ -79,21 +106,11 @@ Suitable for direct use in `fmt/formatter'."
   "Format the current region with FMT or `fmt/formatter'."
   (interactive "r")
   (cl-destructuring-bind (buffer-fn . region-fn) (fmt--normalize fmt)
-    (if (and (eq beg (point-min)) (eq end (point-max)))
-        (funcall buffer-fn)
-      (if region-fn (funcall region-fn beg end)
-        (save-excursion
-          (save-restriction
-            ;; Normalize the region to use full lines.
-            (goto-char beg) (skip-chars-forward " \t\n\r") (beginning-of-line)
-            (setq beg (max beg (point)))
-            (goto-char end) (skip-chars-backward " \t\n\r") (end-of-line)
-            (setq end (min end (point)))
-
-            (narrow-to-region beg end)
-            (fmt--save-indentation
-             (cl-letf (((symbol-function 'widen) #'ignore))
-               (funcall buffer-fn)))))))))
+    (if region-fn (funcall region-fn beg end)
+      (if (and (eq beg (point-min)) (eq end (point-max)))
+          (funcall buffer-fn)
+        (fmt--narrowed-to-region beg end
+          (funcall buffer-fn))))))
 
 ;;;###autoload
 (defun fmt/dwim ()
