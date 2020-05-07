@@ -25,6 +25,18 @@
 
    (t (error "Invalid formatter: %s" fmt))))
 
+(defun fmt--classify (fmt)
+  (unless fmt (error "No formatter specified"))
+  (let* ((arity (func-arity fmt))
+         (min (car arity))
+         (max (cdr arity))
+         (buffer (zerop min))
+         (region (and (<= min 2)
+                      (or (symbolp max) (>= 2 max)))))
+    (unless (or buffer region)
+      (error "Wrong formatter arity: %s, %s, %s" fmt min max))
+    (cons buffer region)))
+
 (defun fmt--current-indentation ()
   (save-excursion
     (goto-char (point-min))
