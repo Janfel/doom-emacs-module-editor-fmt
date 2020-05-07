@@ -5,10 +5,10 @@
       #'format-all-buffer
     #'indent-region)
   "The formatter that is used by `fmt/dwim'.
-This is either a cons (BUF-FN . REG-FN) or a function FN.
-BUF-FN is a function that takes no arguments.
-REG-FN is a function that takes two arguments.
-FN is a function that takes zero or two arguments.")
+This is a function FN that takes either zero or two arguments.
+If FN is called with zero arguments, it shall format the current buffer.
+If FN is called with two arguments BEG and END, it shall
+format the region of the current buffer specified by BEG and END.")
 
 (use-package! format-all
   :when (featurep! +format-all)
