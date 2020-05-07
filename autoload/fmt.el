@@ -9,7 +9,7 @@ If R is non-nil, FMT can be used with two arguments."
          (max (cdr arity))
          (buffer (zerop min))
          (region (and (<= min 2)
-                      (or (symbolp max) (>= 2 max)))))
+                      (or (symbolp max) (>= max 2)))))
     (unless (or buffer region)
       (error "Wrong formatter arity: %s, %s, %s" fmt min max))
     (cons buffer region)))
