@@ -1,7 +1,9 @@
 ;;; editor/fmt/autoload.el -*- lexical-binding: t; -*-
 
-;; {{{ Normalizing the formatter.
 (defun fmt--classify (fmt)
+  "Test for the arities of FMT and return a cons (B . R).
+If B is non-nil, FMT can be used with no arguments.
+If R is non-nil, FMT can be used with two arguments."
   (let* ((arity (func-arity fmt))
          (min (car arity))
          (max (cdr arity))
@@ -13,6 +15,10 @@
     (cons buffer region)))
 
 (defun fmt--normalize (&optional fmt)
+  "Normalize FMT to a cons (BUF-FN . REG-FN).
+BUF-FN is a function that takes no arguments or nil.
+REG-FN is a function that takes two arguments or nil.
+The expression (or BUF-FN REG-FN) always evaluates to t."
   (unless fmt (setq fmt fmt/formatter))
   (cond ((null fmt) (error "No formatter specified"))
         ((consp fmt) (if (or (car fmt) (cdr fmt)) fmt
@@ -21,15 +27,16 @@
                            (cons (and (car arity) fmt)
                                  (and (cdr arity) fmt))))
         (t (error "Invalid formatter: %s" fmt))))
-;; }}}
-;; {{{ Narrowing to region.
+
 (defun fmt--current-indentation ()
+  "Return the current general indentation."
   (save-excursion
     (goto-char (point-min))
     (skip-chars-forward " \t\n\r")
     (current-indentation)))
 
 (defmacro fmt--save-indentation (&rest body)
+  "Save the current general indentation; execute BODY; restore the indentation."
   (let ((indent (make-symbol "indent")))
     `(let ((,indent (fmt--current-indentation)))
        (indent-rigidly (point-min) (point-max) (- ,indent))
@@ -39,6 +46,7 @@
         (max 0 (- ,indent (fmt--current-indentation)))))))
 
 (defmacro fmt--narrowed-to-region (beg end &rest body)
+  "Execute BODY rigidly narrowed to the region between BEG and END."
   (let ((beg-sym (make-symbol "beg"))
         (end-sym (make-symbol "end")))
     `(let (,beg-sym ,end-sym)
@@ -54,7 +62,6 @@
            (fmt--save-indentation
             (cl-letf (((symbol-function 'widen) #'ignore))
               ,@body)))))))
-;; }}}
 
 ;;;###autoload
 (defmacro fmt-define! (name &rest body)
