@@ -10,9 +10,6 @@ BUF-FN is a function that takes no arguments.
 REG-FN is a function that takes two arguments.
 FN is a function that takes zero or two arguments.")
 
-(use-package! reformatter
-  :commands (reformatter-define))
-
 (use-package! format-all
   :when (featurep! +format-all)
   :commands (format-all-buffer))
