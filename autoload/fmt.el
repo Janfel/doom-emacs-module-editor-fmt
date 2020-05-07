@@ -74,7 +74,7 @@ BODY is passed to `reformatter-define' unchanged, however the argument
   `(progn
      (reformatter-define ,long-name :mode nil ,@body)
      (fmakunbound ',long-name)
-     (fmt-defcombine! ,short-name #',name-buf #',name-reg))))
+     (defalias ',short-name #',name-reg))))
 
 ;;;###autoload
 (defun fmt/buffer (&optional fmt)
@@ -82,8 +82,7 @@ BODY is passed to `reformatter-define' unchanged, however the argument
   (interactive)
   (let* ((fmt (or fmt fmt/formatter))
          (buffer? (car (fmt--classify fmt))))
-    (if buffer?
-        (funcall fmt)
+    (if buffer? (funcall fmt)
       (funcall fmt (point-min) (point-max)))))
 
 ;;;###autoload
