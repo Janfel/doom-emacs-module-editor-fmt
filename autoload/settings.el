@@ -1,7 +1,7 @@
 ;;; editor/fmt/autoload/settings.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
-(defun fmt-combine (buffer-fn region-fn)
+(defun +fmt-combine (buffer-fn region-fn)
   "Combine a BUFFER-FN with a REGION-FN.
 
 BUFFER-FN is a function that takes no arguments and formats the current buffer.
