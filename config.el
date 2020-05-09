@@ -1,6 +1,6 @@
 ;;; editor/fmt/config.el -*- lexical-binding: t; -*-
 
-(defvar +fmt/formatter
+(defvar +fmt-formatter
   (if (featurep! +format-all)
       #'format-all-buffer
     #'indent-region)
@@ -21,7 +21,7 @@ and (`or' END (`point-max')).")
     (let ((buffer (lsp-feature? "textDocument/formatting"))
           (region (lsp-feature? "textDocument/rangeFormatting")))
       (if (and buffer region)
-          (setq +fmt/formatter (+fmt-combine #'lsp-format-buffer #'lsp-format-region))
-        (when buffer (setq +fmt/formatter #'lsp-format-buffer))
-        (when region (setq +fmt/formatter #'lsp-format-region)))))
+          (setq +fmt-formatter (+fmt-combine #'lsp-format-buffer #'lsp-format-region))
+        (when buffer (setq +fmt-formatter #'lsp-format-buffer))
+        (when region (setq +fmt-formatter #'lsp-format-region)))))
   (add-hook 'lsp-mode-hook #'+fmt-lsp-mode-maybe-set-formatter-h))

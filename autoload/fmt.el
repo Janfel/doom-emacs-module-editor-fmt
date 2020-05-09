@@ -51,14 +51,14 @@ If R is non-nil, FMT can be used with two arguments."
 
 ;;;###autoload
 (defun +fmt/buffer (&optional fmt)
-  "Format the current buffer with FMT or `+fmt/formatter'."
+  "Format the current buffer with FMT or `+fmt-formatter'."
   (interactive)
   (if (car (+fmt--classify fmt)) (funcall fmt)
     (funcall fmt (point-min) (point-max))))
 
 ;;;###autoload
 (defun +fmt/region (beg end &optional fmt)
-  "Format the current region with FMT or `+fmt/formatter'."
+  "Format the current region with FMT or `+fmt-formatter'."
   (interactive "r")
   (if (cdr (+fmt--classify fmt)) (funcall fmt beg end)
     (if (and (eq beg (point-min))
