@@ -1,9 +1,6 @@
 ;;; editor/fmt/config.el -*- lexical-binding: t; -*-
 
-(defvar +fmt-formatter
-  (if (featurep! +format-all)
-      #'format-all-buffer
-    #'indent-region)
+(defvar +fmt-formatter #'indent-region
   "The formatter that is used by `+fmt/dwim'.
 This is a function FN that takes (0 . 2) arguments BEG and END.
 If both arguments to FN are nil or `eq', it shall format the current buffer.
@@ -13,7 +10,8 @@ and (`or' END (`point-max')).")
 
 (use-package! format-all
   :when (featurep! +format-all)
-  :commands (format-all-buffer))
+  :commands (format-all-buffer)
+  :init (setq-default +fmt-formatter #'format-all-buffer))
 
 (when (featurep! :tools lsp)
   (defun +fmt-lsp-mode-maybe-set-formatter-h ()
