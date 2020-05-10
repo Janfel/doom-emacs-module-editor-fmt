@@ -32,31 +32,21 @@ signal a `user-error' when it would return nil."
         (point-min) (point-max)
         (max 0 (- ,indent (+fmt--current-indentation)))))))
 
-(defmacro +fmt--narrowed-to-region (beg end &rest body)
-  "Execute BODY rigidly narrowed to the region between BEG and END."
-  (let ((beg-sym (make-symbol "beg"))
-        (end-sym (make-symbol "end")))
-    `(let (,beg-sym ,end-sym)
-       (save-excursion
-         (save-restriction
-           ;; Normalize the region to use full lines.
-           (goto-char ,beg) (skip-chars-forward " \t\n\r") (beginning-of-line)
-           (setq ,beg-sym (max ,beg (point)))
-           (goto-char ,end) (skip-chars-backward " \t\n\r") (end-of-line)
-           (setq ,end-sym (min ,end (point)))
-
-           (narrow-to-region ,beg-sym ,end-sym)
-           (+fmt--save-indentation
-            (cl-letf (((symbol-function 'widen) #'ignore))
-              ,@body)))))))
+(defmacro +fmt--strict-narrow (beg end &rest body)
+  "Execute BODY strictly narrowed to the region between BEG and END.
+You do not need to wrap a call to this function  with `save-restriction'."
+  (declare (indent defun))
+  `(save-restriction
+     (cl-letf (((symbol-function 'widen)
+                (apply-partially #'narrow-to-region ,beg ,end)))
+       (narrow-to-region ,beg ,end) ,@body)))
 
 ;;;###autoload
 (defun +fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `+fmt-formatter'."
   (interactive)
   (unless fmt (setq fmt +fmt-formatter))
-  (if (car (+fmt--formatter-p fmt 'error))
-      (funcall fmt)
+  (if (car (+fmt--formatter-p fmt 'error)) (funcall fmt)
     (funcall fmt (point-min) (point-max))))
 
 ;;;###autoload
@@ -64,11 +54,12 @@ signal a `user-error' when it would return nil."
   "Format the current region with FMT or `+fmt-formatter'."
   (interactive "r")
   (unless fmt (setq fmt +fmt-formatter))
-  (if (cdr (+fmt--formatter-p fmt 'error))
-      (funcall fmt beg end)
-    (if (and (eq beg (point-min)) (eq end (point-max)))
-        (funcall fmt)
-      (+fmt--narrowed-to-region beg end (funcall fmt)))))
+  (if (cdr (+fmt--formatter-p fmt 'error)) (funcall fmt beg end)
+    (if (and (eq beg (point-min)) (eq end (point-max))) (funcall fmt)
+      (save-excursion
+        (+fmt--strict-narrow beg end
+          (+fmt--save-indentation
+           (funcall fmt)))))))
 
 ;;;###autoload
 (defun +fmt/dwim ()
