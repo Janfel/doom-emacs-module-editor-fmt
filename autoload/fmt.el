@@ -1,18 +1,19 @@
 ;;; editor/fmt/autoload.el -*- lexical-binding: t; -*-
 
-(defun +fmt--classify (fmt)
-  "Test for the arities of FMT and return a cons (B . R).
-If B is non-nil, FMT can be used with no arguments.
-If R is non-nil, FMT can be used with two arguments."
-  (let* ((arity (func-arity fmt))
-         (min (car arity))
-         (max (cdr arity))
-         (buffer (zerop min))
-         (region (and (<= min 2)
-                      (or (symbolp max) (>= max 2)))))
-    (unless (or buffer region)
-      (error "Wrong formatter arity: %s, %s" fmt arity))
-    (cons buffer region)))
+(defun +fmt--formatter-p (func &optional error)
+  "Test for the arities of FUNC and return a cons (B . R) or nil.
+If B is non-nil, FUNC can be used with no arguments.
+If R is non-nil, FUNC can be used with two arguments.
+If the return value is nil, FUNC can not be used as a formatter.
+If the optional argument ERROR is t, the function will
+signal a `user-error' when it would return nil."
+  (cl-destructuring-bind (min . max) (func-arity func)
+    (let ((buffer (zerop min))
+          (region (and (<= min 2) (or (symbolp max) (>= max 2)))))
+      (if (or buffer region)
+          (cons buffer region)
+        (when error
+          (user-error "Wrong formatter arity: %s, %s" func (cons min max)))))))
 
 (defun +fmt--current-indentation ()
   "Return the current general indentation."
@@ -54,7 +55,8 @@ If R is non-nil, FMT can be used with two arguments."
   "Format the current buffer with FMT or `+fmt-formatter'."
   (interactive)
   (unless fmt (setq fmt +fmt-formatter))
-  (if (car (+fmt--classify fmt)) (funcall fmt)
+  (if (car (+fmt--formatter-p fmt 'error))
+      (funcall fmt)
     (funcall fmt (point-min) (point-max))))
 
 ;;;###autoload
@@ -62,11 +64,11 @@ If R is non-nil, FMT can be used with two arguments."
   "Format the current region with FMT or `+fmt-formatter'."
   (interactive "r")
   (unless fmt (setq fmt +fmt-formatter))
-  (if (cdr (+fmt--classify fmt)) (funcall fmt beg end)
-    (if (and (eq beg (point-min))
-             (eq end (point-max)))
+  (if (cdr (+fmt--formatter-p fmt 'error))
+      (funcall fmt beg end)
+    (if (and (eq beg (point-min)) (eq end (point-max)))
         (funcall fmt)
-      (+fmt--narrowed-to-region beg end (funcall buf-fn)))))
+      (+fmt--narrowed-to-region beg end (funcall fmt)))))
 
 ;;;###autoload
 (defun +fmt/dwim ()
