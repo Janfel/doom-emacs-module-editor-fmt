@@ -1,6 +1,6 @@
 ;;; editor/fmt/config.el -*- lexical-binding: t; -*-
 
-(defvar +fmt-formatter #'indent-region
+(defvar-local +fmt-formatter #'indent-region
   "The formatter that is used by `+fmt/dwim'.
 This is a function FN that takes (0 . 2) arguments BEG and END.
 If both arguments to FN are nil or `eq', it shall format the current buffer.
