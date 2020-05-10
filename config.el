@@ -9,7 +9,6 @@ of the current buffer specified by (`or' BEG (`point-min'))
 and (`or' END (`point-max')).")
 
 (use-package! format-all
-  :when (featurep! +format-all)
   :commands (format-all-buffer)
   :init (setq-default +fmt-formatter #'format-all-buffer))
 
