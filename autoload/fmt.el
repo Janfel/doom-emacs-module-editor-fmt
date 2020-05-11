@@ -17,6 +17,8 @@ signal a `user-error' when it would return nil."
 
 (defun +fmt--current-indentation ()
   "Return the current general indentation."
+  ;; TODO: Look at the minimum of all lines
+  ;; instead of just the first non-blank line.
   (save-excursion
     (goto-char (point-min))
     (skip-chars-forward " \t\n\r")
