@@ -32,14 +32,12 @@ signal a `user-error' when it would return nil."
         (point-min) (point-max)
         (max 0 (- ,indent (+fmt--current-indentation)))))))
 
-(defmacro +fmt--strict-narrow (beg end &rest body)
-  "Execute BODY strictly narrowed to the region between BEG and END.
-You do not need to wrap a call to this function  with `save-restriction'."
-  (declare (indent defun))
-  `(save-restriction
-     (cl-letf (((symbol-function 'widen)
-                (apply-partially #'narrow-to-region ,beg ,end)))
-       (narrow-to-region ,beg ,end) ,@body)))
+(defun +fmt--format-all-respect-narrowing-a (func &rest args)
+  "TODO"
+  (cl-letf (((symbol-function #'widen) #'ignore)
+            ((symbol-function #'erase-buffer)
+             (lambda () (delete-region (point-min) (point-max)))))
+    (apply func args)))
 
 ;;;###autoload
 (defun +fmt/buffer (&optional fmt)
@@ -57,7 +55,8 @@ You do not need to wrap a call to this function  with `save-restriction'."
   (if (cdr (+fmt--formatter-p fmt 'error)) (funcall fmt beg end)
     (if (and (eq beg (point-min)) (eq end (point-max))) (funcall fmt)
       (save-excursion
-        (+fmt--strict-narrow beg end
+        (save-restriction
+          (narrow-to-region beg end)
           (+fmt--save-indentation
            (funcall fmt)))))))
 

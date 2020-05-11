@@ -10,7 +10,9 @@ and (`or' END (`point-max')).")
 
 (use-package! format-all
   :commands (format-all-buffer)
-  :init (setq-default +fmt-formatter #'format-all-buffer))
+  :init (setq-default +fmt-formatter #'format-all-buffer)
+  :config (advice-add #'format-all-buffer :around
+                      #'+fmt--format-all-respect-narrowing-a))
 
 (when (featurep! :tools lsp)
   (defun +fmt-lsp-mode-maybe-set-formatter-h ()
