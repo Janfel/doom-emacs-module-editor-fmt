@@ -44,7 +44,7 @@ signal a `user-error' when it would return nil."
 ;;;###autoload
 (defun +fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `+fmt-formatter'."
-  (interactive)
+  (interactive "*")
   (unless fmt (setq fmt +fmt-formatter))
   (if (car (+fmt--formatter-p fmt 'error)) (funcall fmt)
     (funcall fmt (point-min) (point-max))))
@@ -52,7 +52,7 @@ signal a `user-error' when it would return nil."
 ;;;###autoload
 (defun +fmt/region (beg end &optional fmt)
   "Format the current region with FMT or `+fmt-formatter'."
-  (interactive "r")
+  (interactive "*r")
   (unless fmt (setq fmt +fmt-formatter))
   (if (cdr (+fmt--formatter-p fmt 'error)) (funcall fmt beg end)
     (if (and (eq beg (point-min)) (eq end (point-max))) (funcall fmt)
@@ -65,7 +65,7 @@ signal a `user-error' when it would return nil."
 ;;;###autoload
 (defun +fmt/dwim ()
   "Format the current buffer or region."
-  (interactive)
+  (interactive "*")
   (call-interactively
    (if (doom-region-active-p)
        #'+fmt/region
