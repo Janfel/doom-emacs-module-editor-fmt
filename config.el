@@ -14,6 +14,9 @@ and (`or' END (`point-max')).")
   :config (advice-add #'format-all-buffer :around
                       #'+fmt--format-all-respect-narrowing-a))
 
+(when (featurep! +define)
+  (use-package! reformatter :defer t))
+
 (when (featurep! :tools lsp)
   (defun +fmt-lsp-mode-maybe-set-formatter-h ()
     "Change formatter to `lsp-format' if the language server supports formatting."
