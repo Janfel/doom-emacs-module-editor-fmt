@@ -11,8 +11,14 @@ and (`or' END (`point-max')).")
 (use-package! format-all
   :commands (format-all-buffer)
   :init (setq-default +fmt-formatter #'format-all-buffer)
-  :config (advice-add #'format-all-buffer :around
-                      #'+fmt--format-all-respect-narrowing-a))
+  :config
+  (defadvice! +fmt--format-all-respect-restriction-a (orig-fn &rest args)
+    "Make `format-all-buffer' respect the active restriction."
+    :around #'format-all-buffer
+    (cl-letf (((symbol-function #'widen) #'ignore)
+              ((symbol-function #'erase-buffer)
+               (lambda () (delete-region (point-min) (point-max)))))
+      (apply orig-fn args))))
 
 (when (featurep! +define)
   (use-package! reformatter :defer t))

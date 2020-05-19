@@ -34,13 +34,6 @@ signal a `user-error' when it would return nil."
         (point-min) (point-max)
         (max 0 (- ,indent (+fmt--current-indentation)))))))
 
-(defun +fmt--format-all-respect-narrowing-a (func &rest args)
-  "TODO"
-  (cl-letf (((symbol-function #'widen) #'ignore)
-            ((symbol-function #'erase-buffer)
-             (lambda () (delete-region (point-min) (point-max)))))
-    (apply func args)))
-
 ;;;###autoload
 (defun +fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `+fmt-formatter'."
