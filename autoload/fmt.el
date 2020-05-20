@@ -7,7 +7,8 @@ If R is non-nil, FUNC can be used with two arguments.
 If the return value is nil, FUNC can not be used as a formatter.
 If the optional argument ERROR is t, the function will
 signal a `user-error' when it would return nil."
-  (cl-destructuring-bind (min . max) (func-arity func)
+  (cl-destructuring-bind (min . max)
+      (func-arity (find-function-advised-original func))
     (let ((buffer (zerop min))
           (region (and (<= min 2) (or (symbolp max) (>= max 2)))))
       (if (or buffer region)
