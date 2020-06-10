@@ -1,5 +1,7 @@
 ;;; editor/fmt/autoload.el -*- lexical-binding: t; -*-
 
+(require 'find-func)
+
 (defun +fmt--formatter-p (func &optional error)
   "Test for the arities of FUNC and return a cons (B . R) or nil.
 If B is non-nil, FUNC can be used with no arguments.
