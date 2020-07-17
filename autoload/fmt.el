@@ -9,8 +9,8 @@ If R is non-nil, FUNC can be used with two arguments.
 If the return value is nil, FUNC can not be used as a formatter.
 If the optional argument ERROR is t, the function will
 signal a `user-error' when it would return nil."
-  (when (autoloadp (symbol-function func))
-    (autoload-do-load (symbol-function func)))
+  (let ((fn (if (symbolp func) (symbol-function func) func)))
+    (when (autoloadp fn) (autoload-do-load fn)))
   (cl-destructuring-bind (min . max)
       (func-arity (find-function-advised-original func))
     (let ((buffer (zerop min))
