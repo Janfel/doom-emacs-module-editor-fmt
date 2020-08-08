@@ -12,13 +12,7 @@ and (`or' END (`point-max')).")
   :commands (format-all-buffer)
   :init (setq-default +fmt-formatter #'format-all-buffer)
   :config
-  (defadvice! +fmt--format-all-respect-restriction-a (orig-fn &rest args)
-    "Make `format-all-buffer' respect the active restriction."
-    :around #'format-all-buffer
-    (cl-letf (((symbol-function #'widen) #'ignore)
-              ((symbol-function #'erase-buffer)
-               (lambda () (delete-region (point-min) (point-max)))))
-      (apply orig-fn args))))
+  (load! "redefinitions"))
 
 (when (featurep! +define)
   (use-package! reformatter :defer t))
