@@ -39,6 +39,7 @@
            (lambda ()
              (let ((inhibit-read-only t))
                ;; (erase-buffer)
+               (delete-region (point-min) (point-max))
                (insert output)))))
         (format-all--update-errors-buffer status error-output)
         (run-hook-with-args 'format-all-after-format-functions
