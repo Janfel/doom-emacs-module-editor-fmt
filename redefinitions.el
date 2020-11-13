@@ -10,7 +10,7 @@
       (let ((inbuf (current-buffer))
             (input (buffer-string)))
         (with-temp-buffer
-          (cl-destructuring-bind (errorp errput) (funcall thunk input)
+          (cl-destructuring-bind (errorp error-output) (funcall thunk input)
             (let* ((no-chg (or errorp
                                (= 0 (let ((case-fold-search nil))
                                       (compare-buffer-substrings
@@ -18,17 +18,17 @@
                    (output (cond (errorp nil)
                                  (no-chg t)
                                  (t (buffer-string)))))
-              (list output errput))))))))
+              (list output error-output))))))))
 
 (defadvice! +format-all-buffer--with-restriction-a (formatter language)
-  "redefine `format-all-buffer--with' to obey the restriction."
+  "Redefine `format-all-buffer--with' to obey the restriction."
   :override #'format-all-buffer--with
   (when format-all-debug
-    (message "format-all: formatting %s using %s"
+    (message "Format-All: Formatting %s using %S"
              (buffer-name) (list formatter language)))
   (let ((f-function (gethash formatter format-all--format-table))
         (executable (format-all--formatter-executable formatter)))
-    (cl-destructuring-bind (output errput)
+    (cl-destructuring-bind (output error-output)
         (funcall f-function executable language)
       (let ((status (cond ((null output) :error)
                           ((equal t output) :already-formatted)
@@ -37,13 +37,13 @@
           ;; (widen)
           (format-all--save-line-number
            (lambda ()
-             ;; (erase-buffer)
-             (delete-region (point-min) (point-max))
-             (insert output))))
-        (format-all--show-or-hide-errors errput)
+             (let ((inhibit-read-only t))
+               ;; (erase-buffer)
+               (insert output)))))
+        (format-all--update-errors-buffer status error-output)
         (run-hook-with-args 'format-all-after-format-functions
                             formatter status)
         (message (cl-ecase status
-                   (:error "formatting error")
-                   (:already-formatted "already formatted")
-                   (:reformatted "reformatted!")))))))
+                   (:error "Formatting error")
+                   (:already-formatted "Already formatted")
+                   (:reformatted "Reformatted!")))))))
