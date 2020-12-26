@@ -12,7 +12,8 @@ and (`or' END (`point-max')).")
   :commands (format-all-buffer)
   :init (setq-default +fmt-formatter #'format-all-buffer)
   :config
-  (load! "redefinitions"))
+  (advice-add #'format-all--buffer-thunk :override #'+fmt-restrict-buffer-thunk-a)
+  (advice-add #'format-all--run-chain :override #'+fmt-restrict-run-chain-a))
 
 (when (featurep! +define)
   (use-package! reformatter :defer t))
