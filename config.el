@@ -2,11 +2,9 @@
 
 (defvar-local +fmt-formatter #'indent-region
   "The formatter that is used by `+fmt/dwim'.
-This is a function FN that takes (0 . 2) arguments BEG and END.
-If both arguments to FN are nil or `eq', it shall format the current buffer.
-If at least one argument to FN is not nil, it shall format the region
-of the current buffer specified by (`or' BEG (`point-min'))
-and (`or' END (`point-max')).")
+This is a function that takes either zero or two arguments BEG and END.
+With zero arguments, it shall format the current buffer.
+With two arguments, it shall format the current buffer from BEG to END.")
 
 (use-package! format-all
   :commands (format-all-buffer)
