@@ -40,6 +40,19 @@ signal a `user-error' when it would return nil."
         (max 0 (- ,indent (+fmt--current-indentation)))))))
 
 ;;;###autoload
+(defmacro +fmt-define (name &rest params)
+  "Define NAME-format-buffer and NAME-format-region formatters.
+This is a thin wrapper around `reformatter-define' that disables the creation
+of NAME-on-save-mode and the NAME-format alias."
+  (declare (indent defun))
+  (let ((long-name (intern (format "%s-format" name))))
+    `(progn
+       (reformatter-define ,long-name :mode nil ,@params)
+       (fmakunbound ',long-name))))
+
+(defalias 'formatter-define! #'+fmt-define)
+
+;;;###autoload
 (defun +fmt/buffer (&optional fmt)
   "Format the current buffer with FMT or `+fmt-formatter'."
   (interactive "*")
