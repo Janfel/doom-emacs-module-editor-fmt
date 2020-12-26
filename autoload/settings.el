@@ -8,7 +8,8 @@ REGION-FN is a function that takes two arguments.
 Return a function that can take zero or two arguments and calls
 either BUFFER-FN or REGION-FN accordingly.
 The resulting function can be used as value of `+fmt-formatter'."
+  (declare (pure t) (side-effect-free t))
   (lambda (&optional beg end)
-    (if (eq beg end)
+    (if (and (null beg) (null end))
         (funcall buffer-fn)
       (funcall region-fn beg end))))
