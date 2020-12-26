@@ -53,7 +53,8 @@ signal a `user-error' when it would return nil."
   (interactive "*r")
   (unless fmt (setq fmt +fmt-formatter))
   (if (cdr (+fmt--formatter-p fmt 'error)) (funcall fmt beg end)
-    (if (and (eq beg (point-min)) (eq end (point-max))) (funcall fmt)
+    (if (or (= beg end) (and (= beg (point-min)) (= end (point-max))))
+        (funcall fmt)
       (save-excursion
         (save-restriction
           (narrow-to-region beg end)
