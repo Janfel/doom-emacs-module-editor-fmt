@@ -1,4 +1,4 @@
-;;; editor/fmt/autoload.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt.el -*- lexical-binding: t; -*-
 
 (require 'find-func)
 
