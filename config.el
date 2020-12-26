@@ -14,8 +14,7 @@ With two arguments, it shall format the current buffer from BEG to END.")
   (advice-add #'format-all--buffer-thunk :override #'+fmt-restrict-buffer-thunk-a)
   (advice-add #'format-all--run-chain :override #'+fmt-restrict-run-chain-a))
 
-(when (featurep! +define)
-  (use-package! reformatter :defer t))
+(use-package! reformatter :defer t)
 
 (when (featurep! :tools lsp)
   (defun +fmt-lsp-format-buffer-or-region (&optional beg end)
