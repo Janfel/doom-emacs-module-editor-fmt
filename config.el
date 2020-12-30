@@ -33,3 +33,6 @@ With two arguments, it shall format the current buffer from BEG to END.")
         (when region (setq +fmt-formatter #'lsp-format-region)))))
 
   (add-hook 'lsp-mode-hook #'+fmt-lsp-maybe-set-formatter-h))
+
+(when (featurep! :lang org)
+  (setq-hook! 'org-mode-hook +fmt-formatter #'+org-format-dwim))
