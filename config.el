@@ -3,7 +3,9 @@
 (defvar-local +fmt-formatter #'indent-region
   "The formatter that is used by `+fmt/dwim'.
 This is a function that takes either zero or two arguments BEG and END.
-With zero arguments, it shall format the current buffer.
+With zero arguments, it shall format the current buffer from `point-min' to
+`point-max'. It shall not call `widen' or any function operating outside the
+restriction, such as `erase-buffer'.
 With two arguments, it shall format the current buffer from BEG to END.")
 
 (use-package! format-all
