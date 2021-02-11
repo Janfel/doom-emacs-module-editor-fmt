@@ -69,8 +69,6 @@ For example:
              ((file-readable-p +fmt-prettier-config-file)
               (list "--config" +fmt-prettier-config-file))))
      (list
-      ;; TODO: Use --cursor-offset --range-start --range-end.
-      ;; TODO: Add --end-of-line using `coding-system-eol-type'.
       (if indent-tabs-mode "--use-tabs" "--no-use-tabs")
       "--print-width" (number-to-string fill-column)
       "--tab-width"   (number-to-string standard-indent))
