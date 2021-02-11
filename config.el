@@ -21,5 +21,8 @@ With two arguments, it shall format the current buffer from BEG to END.")
 (when (featurep! :tools lsp)
   (add-hook 'lsp-mode-hook #'+fmt-lsp-maybe-set-formatter-h))
 
+(when (featurep! :lang lua)
+  (setq-hook! 'lua-mode-hook +fmt-formatter #'+fmt-luaformatter-format-region))
+
 (when (featurep! :lang org)
   (setq-hook! 'org-mode-hook +fmt-formatter #'+org-format-dwim))
