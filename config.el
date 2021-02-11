@@ -27,5 +27,8 @@ With two arguments, it shall format the current buffer from BEG to END.")
 (when (featurep! :lang org)
   (setq-hook! 'org-mode-hook +fmt-formatter #'+org-format-dwim))
 
+(setq-hook! '(perl-mode-hook cperl-mode-hook)
+  +fmt-formatter #'+fmt-perltidy-format-region)
+
 (when (featurep! :lang sh)
   (setq-hook! 'sh-mode-hook +fmt-formatter #'+fmt-shfmt-format-region))
