@@ -27,4 +27,5 @@
 ;;;###autoload (autoload '+fmt-ptop-format-region "autoload/fmt-ptop" nil t)
 (+fmt-define +fmt-ptop
   :program +fmt-ptop-program
-  :args (+fmt-ptop-compute-args input-file))
+  :args (+fmt-ptop-compute-args input-file)
+  :stdin nil :stdout nil)
