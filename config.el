@@ -32,3 +32,5 @@ With two arguments, it shall format the current buffer from BEG to END.")
 
 (when (featurep! :lang sh)
   (setq-hook! 'sh-mode-hook +fmt-formatter #'+fmt-shfmt-format-region))
+
+(setq-hook! 'nxml-mode-hook +fmt-formatter #'+fmt-htmltidy-format-region)
