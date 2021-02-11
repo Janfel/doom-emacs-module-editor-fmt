@@ -1,23 +1,32 @@
 ;;; autoload/fmt-perltidy.el -*- lexical-binding: t; -*-
-;;;###if (featurep! :editor fmt)
 
-(defvar perltidy-config-file nil
-  "The configuration file for `perltidy-format-region'.")
+;;; Perl::Tidy - Parses and beautifies Perl source
+;;; https://metacpan.org/release/Perl-Tidy
 
-(defun perltidy-compute-args ()
-  "Compute arguments for `perltidy-format-region'."
+(defvar +fmt-perltidy-program "perltidy"
+  "The executable for `+fmt-perltidy-format-region'.")
+
+(defvar +fmt-perltidy-args nil
+  "List of additional arguments passed to `+fmt-perltidy-program'.")
+
+(defvar +fmt-perltidy-config-file nil
+  "The configuration file for `+fmt-perltidy-program'.")
+
+(defun +fmt-perltidy-compute-args ()
+  "Compute arguments passed to `+fmt-perltidy-program'."
   (nconc
-   (when (and perltidy-config-file (file-readable-p perltidy-config-file))
-     (list (format "--profile=%s" perltidy-config-file)))
+   (when (and +fmt-perltidy-config-file (file-readable-p +fmt-perltidy-config-file))
+     (list (format "--profile=%s" +fmt-perltidy-config-file)))
    (list
     (if indent-tabs-mode "--tabs" "--notabs")
     "--indent-columns"      (number-to-string standard-indent)
     "--default-tabsize"     (number-to-string tab-width)
     "--maximum-line-length" (number-to-string fill-column)
-    "--standard-output" "--standard-error-output")))
+    "--standard-output" "--standard-error-output")
+   +fmt-perltidy-args))
 
-;;;###autoload (autoload 'perltidy-format-buffer "autoload/fmt-perltidy" nil t)
-;;;###autoload (autoload 'perltidy-format-region "autoload/fmt-perltidy" nil t)
-(+fmt-define perltidy
-  :program "perltidy"
-  :args (perltidy-compute-args))
+;;;###autoload (autoload '+fmt-perltidy-format-buffer "autoload/fmt-perltidy" nil t)
+;;;###autoload (autoload '+fmt-perltidy-format-region "autoload/fmt-perltidy" nil t)
+(+fmt-define +fmt-perltidy
+  :program +fmt-perltidy-program
+  :args (+fmt-perltidy-compute-args))
