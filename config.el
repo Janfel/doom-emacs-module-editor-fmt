@@ -23,7 +23,7 @@ With two arguments, it shall format the current buffer from BEG to END.")
 (setq-hook! '(html-mode-hook mhtml-mode-hook nxml-mode-hook)
   +fmt-formatter #'+fmt-htmltidy-format-region)
 
-(setq-hook! 'org-mode-hook +fmt-formatter #'+org-format-dwim)
+(setq-hook! 'org-mode-hook +fmt-formatter #'+fmt-org-format-buffer-or-region)
 
 (setq-hook! '(perl-mode-hook cperl-mode-hook)
   +fmt-formatter #'+fmt-perltidy-format-region)
