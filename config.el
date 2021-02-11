@@ -1,6 +1,6 @@
 ;;; editor/fmt/config.el -*- lexical-binding: t; -*-
 
-(defvar-local +fmt-formatter #'indent-region
+(defvar +fmt-formatter #'indent-region
   "The formatter that is used by `+fmt/dwim'.
 This is a function that takes either zero or two arguments BEG and END.
 With zero arguments, it shall format the current buffer from `point-min' to
