@@ -33,6 +33,9 @@ With two arguments, it shall format the current buffer from BEG to END.")
 
 (setq-hook! 'org-mode-hook +fmt-formatter #'+fmt-org-format-buffer-or-region)
 
+(setq-hook! '(pascal-mode-hook opascal-mode-hook)
+  +fmt-formatter #'+fmt-ptop-format-region)
+
 (setq-hook! '(perl-mode-hook cperl-mode-hook)
   +fmt-formatter #'+fmt-perltidy-format-region)
 
