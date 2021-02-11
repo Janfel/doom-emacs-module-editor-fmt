@@ -20,8 +20,16 @@ With two arguments, it shall format the current buffer from BEG to END.")
 
 ;; Emacs Builtin Modes
 
-(setq-hook! '(html-mode-hook mhtml-mode-hook nxml-mode-hook)
+(setq-hook! '(html-mode-hook nxml-mode-hook)
   +fmt-formatter #'+fmt-htmltidy-format-region)
+
+(setq-hook! '(mhtml-mode-hook
+              css-mode-hook
+              scss-mode-hook
+              less-css-mode-hook
+              js-mode-hook
+              js-jsx-mode-hook)
+  +fmt-formatter #'+fmt-prettier-format-region)
 
 (setq-hook! 'org-mode-hook +fmt-formatter #'+fmt-org-format-buffer-or-region)
 
@@ -37,3 +45,11 @@ With two arguments, it shall format the current buffer from BEG to END.")
 
 (when (featurep! :lang lua)
   (setq-hook! 'lua-mode-hook +fmt-formatter #'+fmt-luaformatter-format-region))
+
+(when (featurep! :lang php)
+  (setq-hook! 'php-mode-hook +fmt-formatter #'+fmt-prettier-format-region))
+
+(when (featurep! :lang web)
+  (setq-hook! '(web-mode-hook haml-mode-hook pug-mode-hook sass-mode-hook)
+    +fmt-formatter #'+fmt-prettier-format-region)
+  (setq-hook! 'sws-mode-hook +fmt-formatter #'indent-region))
