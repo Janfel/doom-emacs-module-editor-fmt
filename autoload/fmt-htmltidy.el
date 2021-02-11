@@ -15,7 +15,7 @@
 (defvar +fmt-htmltidy-xml-mode-list '(nxml-mode)
   "List of modes where `+fmt-htmltidy-format-buffer' uses the “-xml” flag.")
 
-(defun tidy-compute-args ()
+(defun +fmt-htmltidy-compute-args ()
   "Compute arguments passed to `+fmt-htmltidy-program'."
   (nconc
    (when (memq major-mode +fmt-htmltidy-xml-mode-list) '("-xml"))
