@@ -12,21 +12,19 @@
 (defvar +fmt-ptop-config-file nil
   "The configuration file for `+fmt-ptop-program'.")
 
-;; TODO: Use :stdin/:stdout instead of /dev/ on Windows.
-(defun +fmt-ptop-compute-args ()
+(defun +fmt-ptop-compute-args (input-file)
   "Compute arguments passed to `+fmt-ptop-program'."
-  (when IS-WINDOWS (error "PTOP can't be used on Windows"))
   (nconc
    (when (and +fmt-ptop-config-file (file-readable-p +fmt-ptop-config-file))
      (list "-c" +fmt-ptop-config-file))
    (list
     "-i" (number-to-string standard-indent)
-    "-l" (number-to-string fill-column)
-    "/dev/stdin" "/dev/stdout")
-   +fmt-ptop-args))
+    "-l" (number-to-string fill-column))
+   (copy-sequence +fmt-ptop-args)
+   (list input-file input-file)))
 
 ;;;###autoload (autoload '+fmt-ptop-format-buffer "autoload/fmt-ptop" nil t)
 ;;;###autoload (autoload '+fmt-ptop-format-region "autoload/fmt-ptop" nil t)
 (+fmt-define +fmt-ptop
   :program +fmt-ptop-program
-  :args (+fmt-ptop-compute-args))
+  :args (+fmt-ptop-compute-args input-file))
