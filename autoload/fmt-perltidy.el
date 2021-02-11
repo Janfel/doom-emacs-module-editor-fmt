@@ -25,8 +25,8 @@
     "--standard-output" "--standard-error-output")
    +fmt-perltidy-args))
 
-;;;###autoload (autoload '+fmt-perltidy-format-buffer "autoload/fmt-perltidy" nil t)
-;;;###autoload (autoload '+fmt-perltidy-format-region "autoload/fmt-perltidy" nil t)
+;;;###autoload (autoload '+fmt-perltidy-format-buffer "editor/fmt/autoload/fmt-perltidy" nil t)
+;;;###autoload (autoload '+fmt-perltidy-format-region "editor/fmt/autoload/fmt-perltidy" nil t)
 (+fmt-define +fmt-perltidy
   :program +fmt-perltidy-program
   :args (+fmt-perltidy-compute-args))

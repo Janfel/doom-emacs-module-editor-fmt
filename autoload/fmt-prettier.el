@@ -74,8 +74,8 @@ For example:
       "--tab-width"   (number-to-string standard-indent))
      +fmt-prettier-args)))
 
-;;;###autoload (autoload '+fmt-prettier-format-buffer "autoload/fmt-prettier" nil t)
-;;;###autoload (autoload '+fmt-prettier-format-region "autoload/fmt-prettier" nil t)
+;;;###autoload (autoload '+fmt-prettier-format-buffer "editor/fmt/autoload/fmt-prettier" nil t)
+;;;###autoload (autoload '+fmt-prettier-format-region "editor/fmt/autoload/fmt-prettier" nil t)
 (+fmt-define +fmt-prettier
     :program +fmt-prettier-program
     :args (+fmt-prettier-compute-args))

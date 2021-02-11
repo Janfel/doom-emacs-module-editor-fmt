@@ -23,8 +23,8 @@
       "--continuation-indent-width"  (number-to-string cont-indent)
       "--tab-width"                  (number-to-string tab-width)))))
 
-;;;###autoload (autoload '+fmt-luaformatter-format-buffer "autoload/fmt-luaformatter" nil t)
-;;;###autoload (autoload '+fmt-luaformatter-format-region "autoload/fmt-luaformatter" nil t)
+;;;###autoload (autoload '+fmt-luaformatter-format-buffer "editor/fmt/autoload/fmt-luaformatter" nil t)
+;;;###autoload (autoload '+fmt-luaformatter-format-region "editor/fmt/autoload/fmt-luaformatter" nil t)
 (+fmt-define +fmt-luaformatter
   :program +fmt-luaformatter-program
   :args (+fmt-luaformatter-compute-args))

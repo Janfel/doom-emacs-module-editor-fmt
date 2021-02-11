@@ -31,8 +31,8 @@
     "--tab-size"         (number-to-string tab-width))
    +fmt-htmltidy-args))
 
-;;;###autoload (autoload '+fmt-htmltidy-format-buffer "autoload/fmt-htmltidy" nil t)
-;;;###autoload (autoload '+fmt-htmltidy-format-region "autoload/fmt-htmltidy" nil t)
+;;;###autoload (autoload '+fmt-htmltidy-format-buffer "editor/fmt/autoload/fmt-htmltidy" nil t)
+;;;###autoload (autoload '+fmt-htmltidy-format-region "editor/fmt/autoload/fmt-htmltidy" nil t)
 (+fmt-define +fmt-htmltidy
   :program +fmt-htmltidy-program
   :args (+fmt-htmltidy-compute-args)

@@ -23,8 +23,8 @@
    (copy-sequence +fmt-ptop-args)
    (list input-file input-file)))
 
-;;;###autoload (autoload '+fmt-ptop-format-buffer "autoload/fmt-ptop" nil t)
-;;;###autoload (autoload '+fmt-ptop-format-region "autoload/fmt-ptop" nil t)
+;;;###autoload (autoload '+fmt-ptop-format-buffer "editor/fmt/autoload/fmt-ptop" nil t)
+;;;###autoload (autoload '+fmt-ptop-format-region "editor/fmt/autoload/fmt-ptop" nil t)
 (+fmt-define +fmt-ptop
   :program +fmt-ptop-program
   :args (+fmt-ptop-compute-args input-file)

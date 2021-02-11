@@ -18,8 +18,8 @@
    (list "-i" (number-to-string (if indent-tabs-mode 0 standard-indent)))
    +fmt-shfmt-args))
 
-;;;###autoload (autoload '+fmt-shfmt-format-buffer "autoload/fmt-shfmt" nil t)
-;;;###autoload (autoload '+fmt-shfmt-format-region "autoload/fmt-shfmt" nil t)
+;;;###autoload (autoload '+fmt-shfmt-format-buffer "editor/fmt/autoload/fmt-shfmt" nil t)
+;;;###autoload (autoload '+fmt-shfmt-format-region "editor/fmt/autoload/fmt-shfmt" nil t)
 (+fmt-define +fmt-shfmt
   :program +fmt-shfmt-program
   :args (+fmt-shfmt-compute-args))
