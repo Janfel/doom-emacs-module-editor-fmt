@@ -18,19 +18,22 @@ With two arguments, it shall format the current buffer from BEG to END.")
 
 (use-package! reformatter :defer t)
 
+;; Emacs Builtin Modes
+
+(setq-hook! '(html-mode-hook mhtml-mode-hook nxml-mode-hook)
+  +fmt-formatter #'+fmt-htmltidy-format-region)
+
+(setq-hook! 'org-mode-hook +fmt-formatter #'+org-format-dwim)
+
+(setq-hook! '(perl-mode-hook cperl-mode-hook)
+  +fmt-formatter #'+fmt-perltidy-format-region)
+
+(setq-hook! 'sh-mode-hook +fmt-formatter #'+fmt-shfmt-format-region)
+
+;; Doom Modules
+
 (when (featurep! :tools lsp)
   (add-hook 'lsp-mode-hook #'+fmt-lsp-maybe-set-formatter-h))
 
 (when (featurep! :lang lua)
   (setq-hook! 'lua-mode-hook +fmt-formatter #'+fmt-luaformatter-format-region))
-
-(when (featurep! :lang org)
-  (setq-hook! 'org-mode-hook +fmt-formatter #'+org-format-dwim))
-
-(setq-hook! '(perl-mode-hook cperl-mode-hook)
-  +fmt-formatter #'+fmt-perltidy-format-region)
-
-(when (featurep! :lang sh)
-  (setq-hook! 'sh-mode-hook +fmt-formatter #'+fmt-shfmt-format-region))
-
-(setq-hook! 'nxml-mode-hook +fmt-formatter #'+fmt-htmltidy-format-region)
