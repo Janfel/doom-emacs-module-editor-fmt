@@ -14,7 +14,7 @@
   (nconc
    (when (and +fmt-black-config-file (file-readable-p +fmt-black-config-file))
      (list "--config" +fmt-black-config-file))
-   ;; Comes in the next version.
+   ;; Comes in the next version. Makes the next line obsolete.
    ;; (when buffer-file-name (list "--stdin-filename" buffer-file-name))
    (when (string-suffix-p ".pyi" (or buffer-file-name "") t) '("--pyi"))
    (list "--line-length" (number-to-string fill-column) "--quiet" "-")
