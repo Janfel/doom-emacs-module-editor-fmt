@@ -14,7 +14,6 @@
   (nconc
    (when (and +fmt-black-config-file (file-readable-p +fmt-black-config-file))
      (list "--config" +fmt-black-config-file))
-   (when (and (sys-feature-p 'black/tabs) indent-tabs-mode) '("--use-tabs"))
    ;; Comes in the next version.
    ;; (when buffer-file-name (list "--stdin-filename" buffer-file-name))
    (when (string-suffix-p ".pyi" (or buffer-file-name "") t) '("--pyi"))
