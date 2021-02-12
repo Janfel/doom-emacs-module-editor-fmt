@@ -1,4 +1,4 @@
-;;; autoload/fmt-ptop.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt-ptop.el -*- lexical-binding: t; -*-
 
 ;;; PTOP - Free Pascal Source Formatter
 ;;; https://freepascal.org/tools/ptop.html

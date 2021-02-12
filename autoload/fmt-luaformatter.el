@@ -1,4 +1,4 @@
-;;; autoload/fmt-luaformatter.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt-luaformatter.el -*- lexical-binding: t; -*-
 
 ;;; LuaFormatter - Code formatter for Lua
 ;;; https://github.com/Koihik/LuaFormatter

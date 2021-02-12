@@ -1,4 +1,4 @@
-;;; autoload/fmt-perltidy.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt-perltidy.el -*- lexical-binding: t; -*-
 
 ;;; Perl::Tidy - Parses and beautifies Perl source
 ;;; https://metacpan.org/release/Perl-Tidy

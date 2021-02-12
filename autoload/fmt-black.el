@@ -1,4 +1,4 @@
-;;; autoload/fmt-black.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt-black.el -*- lexical-binding: t; -*-
 
 ;;; Black - The Uncompromising Code Formatter
 ;;; https://github.com/psf/black

@@ -1,4 +1,4 @@
-;;; autoload/fmt-shfmt.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt-shfmt.el -*- lexical-binding: t; -*-
 
 ;;; shfmt - Format shell programs
 ;;; https://github.com/mvdan/sh

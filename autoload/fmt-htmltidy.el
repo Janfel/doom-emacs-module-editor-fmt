@@ -1,4 +1,4 @@
-;;; autoload/fmt-htmltidy.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt-htmltidy.el -*- lexical-binding: t; -*-
 
 ;;; HTML Tidy - A tool to tidy down your HTML code to a clean style
 ;;; https://www.html-tidy.org/

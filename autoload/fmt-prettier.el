@@ -1,4 +1,4 @@
-;;; autoload/fmt-prettier.el -*- lexical-binding: t; -*-
+;;; editor/fmt/autoload/fmt-prettier.el -*- lexical-binding: t; -*-
 
 ;;; Prettier - Opinionated Code Formatter
 ;;; https://prettier.io/
