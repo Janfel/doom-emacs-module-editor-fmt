@@ -11,18 +11,16 @@
 
 (defun +fmt-luaformatter-compute-args ()
   "Compute arguments for `+fmt-luaformatter-format-region'."
-  (let ((indent      (if indent-tabs-mode 1 standard-indent))
-        (cont-indent (if indent-tabs-mode 1 standard-indent)))
+  (let ((indent (if indent-tabs-mode 1 standard-indent)))
     (nconc
      (when (and +fmt-luaformatter-config-file
                 (file-readable-p +fmt-luaformatter-config-file))
        (list "--config" +fmt-luaformatter-config-file))
-     (list
-      (if indent-tabs-mode "--use-tab" "--no-use-tab")
-      "--column-limit"               (number-to-string fill-column)
-      "--indent-width"               (number-to-string indent)
-      "--continuation-indent-width"  (number-to-string cont-indent)
-      "--tab-width"                  (number-to-string tab-width)))))
+     (list (if indent-tabs-mode "--use-tab" "--no-use-tab")
+           "--column-limit"               (number-to-string fill-column)
+           "--indent-width"               (number-to-string indent)
+           "--continuation-indent-width"  (number-to-string indent)
+           "--tab-width"                  (number-to-string tab-width)))))
 
 ;;;###autoload (autoload '+fmt-luaformatter-format-buffer "editor/fmt/autoload/fmt-luaformatter" nil t)
 ;;;###autoload (autoload '+fmt-luaformatter-format-region "editor/fmt/autoload/fmt-luaformatter" nil t)

@@ -17,9 +17,8 @@
   (nconc
    (when (and +fmt-ptop-config-file (file-readable-p +fmt-ptop-config-file))
      (list "-c" +fmt-ptop-config-file))
-   (list
-    "-i" (number-to-string standard-indent)
-    "-l" (number-to-string fill-column))
+   (list "-i" (number-to-string standard-indent)
+         "-l" (number-to-string fill-column))
    (copy-sequence +fmt-ptop-args)
    (list input-file input-file)))
 

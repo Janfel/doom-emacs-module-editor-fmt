@@ -21,14 +21,13 @@
    (when (memq major-mode +fmt-htmltidy-xml-mode-list) '("-xml"))
    (when (and +fmt-htmltidy-config-file (file-readable-p +fmt-htmltidy-config-file))
      (list "-config" +fmt-htmltidy-config-file))
-   (list
-    "--quiet"            "yes"
-    "--tidy-mark"        "no"
-    "--indent"           "yes"
-    "--indent-with-tabs" (if indent-tabs-mode "yes" "no")
-    "--indent-spaces"    (if indent-tabs-mode "1" (number-to-string standard-indent))
-    "--wrap"             (number-to-string fill-column)
-    "--tab-size"         (number-to-string tab-width))
+   (list "--quiet"            "yes"
+         "--tidy-mark"        "no"
+         "--indent"           "yes"
+         "--indent-with-tabs" (if indent-tabs-mode "yes" "no")
+         "--indent-spaces"    (if indent-tabs-mode "1" (number-to-string standard-indent))
+         "--wrap"             (number-to-string fill-column)
+         "--tab-size"         (number-to-string tab-width))
    +fmt-htmltidy-args))
 
 ;;;###autoload (autoload '+fmt-htmltidy-format-buffer "editor/fmt/autoload/fmt-htmltidy" nil t)

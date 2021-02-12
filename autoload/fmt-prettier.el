@@ -65,17 +65,16 @@ For example:
      (and buffer-file-name (list "--stdin-filepath" buffer-file-name))
      (and parser           (list "--parser"         parser))
      (when +fmt-prettier-config-file
-       (cond ((eq +fmt-prettier-config-file 'none) (list "--no-config"))
+       (cond ((eq +fmt-prettier-config-file 'none) '("--no-config"))
              ((file-readable-p +fmt-prettier-config-file)
               (list "--config" +fmt-prettier-config-file))))
-     (list
-      (if indent-tabs-mode "--use-tabs" "--no-use-tabs")
-      "--print-width" (number-to-string fill-column)
-      "--tab-width"   (number-to-string standard-indent))
+     (list (if indent-tabs-mode "--use-tabs" "--no-use-tabs")
+           "--print-width" (number-to-string fill-column)
+           "--tab-width"   (number-to-string standard-indent))
      +fmt-prettier-args)))
 
 ;;;###autoload (autoload '+fmt-prettier-format-buffer "editor/fmt/autoload/fmt-prettier" nil t)
 ;;;###autoload (autoload '+fmt-prettier-format-region "editor/fmt/autoload/fmt-prettier" nil t)
 (+fmt-define +fmt-prettier
-    :program +fmt-prettier-program
-    :args (+fmt-prettier-compute-args))
+  :program +fmt-prettier-program
+  :args (+fmt-prettier-compute-args))

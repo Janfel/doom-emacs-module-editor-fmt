@@ -16,13 +16,12 @@
   "Compute arguments passed to `+fmt-perltidy-program'."
   (nconc
    (when (and +fmt-perltidy-config-file (file-readable-p +fmt-perltidy-config-file))
-     (list (format "--profile=%s" +fmt-perltidy-config-file)))
-   (list
-    (if indent-tabs-mode "--tabs" "--notabs")
-    "--indent-columns"      (number-to-string standard-indent)
-    "--default-tabsize"     (number-to-string tab-width)
-    "--maximum-line-length" (number-to-string fill-column)
-    "--standard-output" "--standard-error-output")
+     (list (concat "--profile=" +fmt-perltidy-config-file)))
+   (list (if indent-tabs-mode "--tabs" "--notabs")
+         "--indent-columns"      (number-to-string standard-indent)
+         "--default-tabsize"     (number-to-string tab-width)
+         "--maximum-line-length" (number-to-string fill-column)
+         "--standard-output" "--standard-error-output")
    +fmt-perltidy-args))
 
 ;;;###autoload (autoload '+fmt-perltidy-format-buffer "editor/fmt/autoload/fmt-perltidy" nil t)
