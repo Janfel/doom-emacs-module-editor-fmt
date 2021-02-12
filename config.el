@@ -39,6 +39,8 @@ With two arguments, it shall format the current buffer from BEG to END.")
 (setq-hook! '(perl-mode-hook cperl-mode-hook)
   +fmt-formatter #'+fmt-perltidy-format-region)
 
+(setq-hook! 'python-mode-hook +fmt-formatter #'+fmt-black-format-region)
+
 (setq-hook! 'sh-mode-hook +fmt-formatter #'+fmt-shfmt-format-region)
 
 ;; Doom Modules
