@@ -1,5 +1,8 @@
 ;;; autoload/fmt-black.el -*- lexical-binding: t; -*-
 
+;;; Black - The Uncompromising Code Formatter
+;;; https://github.com/psf/black
+
 (defvar +fmt-black-program "black"
   "The executable for `+fmt-black-format-region'.")
 
