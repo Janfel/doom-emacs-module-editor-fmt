@@ -19,6 +19,7 @@
        (list "--config" +fmt-luaformatter-config-file))
      (list
       (if indent-tabs-mode "--use-tab" "--no-use-tab")
+      "--column-limit"               (number-to-string fill-column)
       "--indent-width"               (number-to-string indent)
       "--continuation-indent-width"  (number-to-string cont-indent)
       "--tab-width"                  (number-to-string tab-width)))))
