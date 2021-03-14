@@ -21,6 +21,7 @@ Bind this variable locally to override `+fmt-prettier-parser-alist'.
 For example:
   (setq-hook! 'flow-minor-mode-hook +fmt-prettier-parser \"flow\").")
 
+;; Maybe use emacs-language-id for this?
 (defvar +fmt-prettier-parser-alist
   '(;; HTML
     (html-mode       . "html")
