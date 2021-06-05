@@ -7,12 +7,20 @@
       (lsp-format-buffer)
     (lsp-format-region beg end)))
 
+(defun +fmt-eglot-format-region (beg end)
+  "Fixed-arity wrapper for `eglot-format'."
+  (eglot-format beg end))
+
 ;;;###autoload
 (defun +fmt-lsp-maybe-set-formatter-h ()
   "Change formatter to the language server if formatting is supported."
-  (let ((buffer (lsp-feature? "textDocument/formatting"))
-        (region (lsp-feature? "textDocument/rangeFormatting")))
-    (if (and buffer region)
-        (setq +fmt-formatter #'+fmt-lsp-format-buffer-or-region)
-      (when buffer (setq +fmt-formatter #'lsp-format-buffer))
-      (when region (setq +fmt-formatter #'lsp-format-region)))))
+  (cl-destructuring-bind (buffer region both)
+      (cond ((bound-and-true-p lsp-managed-mode)
+             (list (if (lsp-feature? "textDocument/formatting") #'lsp-format-buffer)
+                   (if (lsp-feature? "textDocument/rangeFormatting") #'lsp-format-region)
+                   #'+fmt-lsp-format-buffer-or-region-h))
+            ((bound-and-true-p eglot--managed-mode)
+             (list (if (eglot--server-capable :documentFormattingProvider) #'eglot-format-buffer)
+                   (if (eglot--server-capable :documentRangeFormattingProvider) #'+fmt-eglot-format-region)
+                   #'eglot-format)))
+    (setf +fmt-formatter (if (and buffer region) both (or region buffer +fmt-formatter)))))
