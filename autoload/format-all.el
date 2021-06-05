@@ -10,20 +10,21 @@
     ;; Removed: (widen)
     (let ((inbuf (current-buffer))
           (input (buffer-string)))
-      (with-temp-buffer
-        (cl-destructuring-bind (errorp error-output) (funcall thunk input)
-          (let* ((no-chg (or errorp
-                             (= 0 (let ((case-fold-search nil))
-                                    (compare-buffer-substrings
-                                     inbuf nil nil nil nil nil)))))
-                 (output (cond (errorp nil)
-                               (no-chg t)
-                               (t (buffer-string)))))
-            (list output error-output)))))))
+      (inheritenv
+       (with-temp-buffer
+         (cl-destructuring-bind (errorp error-output) (funcall thunk input)
+           (let* ((no-chg (or errorp
+                              (= 0 (let ((case-fold-search nil))
+                                     (compare-buffer-substrings
+                                      inbuf nil nil nil nil nil)))))
+                  (output (cond (errorp nil)
+                                (no-chg t)
+                                (t (buffer-string)))))
+             (list output error-output))))))))
 
 ;;;###autoload
 (defun +fmt-restrict-run-chain-a (language chain)
-  "Redefine `+fmt-restrict-run-chain-a' to obey the restriction."
+  "Redefine `format-all--run-chain' to obey the restriction."
   (let* ((chain (format-all--normalize-chain chain))
          (chain-tail chain)
          (error-output "")
@@ -57,7 +58,7 @@
                            (append reformatted-by (list f-name)))
                      (let ((inhibit-read-only t))
                        ;; Removed: (erase-buffer)
-                       (delete-region (point-min) (point-max))
+                       (delete-region (point-min) (point-max)) ;; Inserted
                        (insert f-output))
                      (setq f-status :reformatted)))
               (run-hook-with-args 'format-all-after-format-functions
