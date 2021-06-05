@@ -1,5 +1,7 @@
 ;;; editor/fmt/autoload/format-all.el -*- lexical-binding: t; -*-
 
+(defvar format-all--user-args)
+
 ;;;###autoload
 (defun +fmt-restrict-buffer-thunk-a (thunk)
   "Redefine `format-all--buffer-thunk' to obey the restriction."
