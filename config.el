@@ -46,7 +46,8 @@ With two arguments, it shall format the current buffer from BEG to END.")
 ;; Doom Modules
 
 (when (featurep! :tools lsp)
-  (add-hook 'lsp-mode-hook #'+fmt-lsp-maybe-set-formatter-h))
+  (add-hook! '(lsp-managed-mode-hook eglot-managed-mode-hook)
+             #'+fmt-lsp-maybe-set-formatter-h))
 
 (when (featurep! :lang lua)
   (setq-hook! 'lua-mode-hook +fmt-formatter #'+fmt-luaformatter-format-region))
