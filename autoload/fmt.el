@@ -2,6 +2,18 @@
 
 (require 'find-func)
 
+(defun +fmt--indirect-function-advised-original (object)
+  "Return the conceptual, advice-free function binding of OBJECT."
+  (require 'nadvice)
+  (catch 'break
+    (while object
+      (setq object
+            (cond ((advice--p object) (advice--cd*r object))
+                  ((autoloadp object) (autoload-do-load object))
+                  ((symbolp object)
+                   (indirect-function object))
+                  ((functionp object) (throw 'break object)))))))
+
 (defun +fmt--formatter-p (func &optional error)
   "Test for the arities of FUNC and return a cons (B . R) or nil.
 If B is non-nil, FUNC can be used with no arguments.
