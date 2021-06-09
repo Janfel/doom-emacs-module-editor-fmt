@@ -21,16 +21,15 @@ If R is non-nil, FUNC can be used with two arguments.
 If the return value is nil, FUNC can not be used as a formatter.
 If the optional argument ERROR is t, the function will
 signal a `user-error' when it would return nil."
-  (let ((fn (if (symbolp func) (symbol-function func) func)))
-    (when (autoloadp fn) (autoload-do-load fn)))
+  ;; Guard against macros and special forms.
+  (unless (functionp func) (signal 'wrong-type-argument (list #'functionp func)))
   (cl-destructuring-bind (min . max)
-      (func-arity (find-function-advised-original func))
+      (func-arity (+fmt--indirect-function-advised-original func))
     (let ((buffer (zerop min))
-          (region (and (<= min 2) (or (symbolp max) (>= max 2)))))
-      (if (or buffer region)
-          (cons buffer region)
-        (when error
-          (user-error "Wrong formatter arity: %s, %s" func (cons min max)))))))
+          (region (and (<= min 2) (or (eq max 'many) (<= 2 max)))))
+      (cond ((or buffer region) (cons buffer region))
+            (error (user-error "Unsupported formatter arity: %s, %s"
+                               func (cons min max)))))))
 
 (defun +fmt--current-indentation ()
   "Return the current general indentation."
