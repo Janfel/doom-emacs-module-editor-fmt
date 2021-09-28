@@ -22,5 +22,7 @@
             ((bound-and-true-p eglot--managed-mode)
              (list (if (eglot--server-capable :documentFormattingProvider) #'eglot-format-buffer)
                    (if (eglot--server-capable :documentRangeFormattingProvider) #'+fmt-eglot-format-region)
-                   #'eglot-format)))
-    (setf +fmt-formatter (if (and buffer region) both (or region buffer +fmt-formatter)))))
+                   #'eglot-format))
+            ((list nil nil nil)))
+    (setf +fmt-formatter
+          (if (and buffer region both) both (or region buffer +fmt-formatter)))))
