@@ -4,14 +4,14 @@
 
 (defun +fmt--indirect-function-advised-original (object)
   "Return the conceptual, advice-free function binding of OBJECT."
+  ;; TODO: Fix `nil' error on first call.
   (require 'nadvice)
   (catch 'break
     (while object
       (setq object
             (cond ((advice--p object) (advice--cd*r object))
                   ((autoloadp object) (autoload-do-load object))
-                  ((symbolp object)
-                   (indirect-function object))
+                  ((symbolp object)   (indirect-function object))
                   ((functionp object) (throw 'break object)))))))
 
 (defun +fmt--formatter-p (func &optional error)
