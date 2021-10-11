@@ -18,7 +18,7 @@
       (cond ((bound-and-true-p lsp-managed-mode)
              (list (if (lsp-feature? "textDocument/formatting") #'lsp-format-buffer)
                    (if (lsp-feature? "textDocument/rangeFormatting") #'lsp-format-region)
-                   #'+fmt-lsp-format-buffer-or-region-h))
+                   #'+fmt-lsp-format-buffer-or-region))
             ((bound-and-true-p eglot--managed-mode)
              (list (if (eglot--server-capable :documentFormattingProvider) #'eglot-format-buffer)
                    (if (eglot--server-capable :documentRangeFormattingProvider) #'+fmt-eglot-format-region)
