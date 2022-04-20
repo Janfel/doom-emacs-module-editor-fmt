@@ -29,6 +29,15 @@
          (chain-tail chain)
          (error-output "")
          (reformatted-by '()))
+    (let ((unsupported
+           (when region
+             (cl-remove-if
+              (lambda (f-name)
+                (memq 'region (gethash f-name format-all--features-table)))
+              (mapcar #'car chain)))))
+      (when unsupported
+        (error "The format-all-region command is not supported for %s"
+               (string-join (mapcar #'symbol-name unsupported) ", "))))
     (format-all--save-line-number
      (lambda ()
        (cl-loop
@@ -48,7 +57,7 @@
                (buffer-string))))
           (cl-destructuring-bind (f-output f-error-output)
               (let ((format-all--user-args f-args))
-                (funcall f-function f-executable language))
+                (funcall f-function f-executable language region))
             (let ((f-status :already-formatted))
               (cond ((null f-output)
                      (setq error-output f-error-output)
